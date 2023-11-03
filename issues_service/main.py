@@ -1,5 +1,4 @@
 import uvicorn
-import json
 from typing import Union
 
 from fastapi import FastAPI
@@ -14,17 +13,20 @@ app = FastAPI()
 #     response = requests.get(url)
 #     return response.json()
 
-@app.get("/commits")
+#Getting Pull requests
+
+@app.get("/issues")
 def read_root():
     # print(u)
-    #url = f"https://api.github.com/repos/kasuntharu/developer-iq/commits"  
-    url = f"https://api/github.com/repos/facebook/react-native/commits" 
+    #url = f"https://api.github.com/repos/Kasuntharu/knowledge_hub/pulls"  
+    url = f"https://api.github.com/repos/facebook/react-native/issues"
     response = requests.get(url)
     return response.json()
+
 
 # @app.get("/items/{item_id}")
 # def read_item(item_id: int, q: Union[str, None] = None):
 #     return {"item_id": item_id, "q": q}
 
 if __name__ == "_main_":
-    uvicorn.run("_main_:app", host="0.0.0.0", port=8008, reload=True, workers=2)
+    uvicorn.run("_main_:app", host="0.0.0.0", port=8010, reload=True, workers=2)
