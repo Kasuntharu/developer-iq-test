@@ -10,7 +10,7 @@ app = FastAPI()
 
 headers = {
         'Accept': 'application/vnd.github+json',
-        'Authorization': 'Bearer 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',
+        # 'Authorization': 'Bearer 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',
     }
 
 @app.exception_handler(HTTPException)
