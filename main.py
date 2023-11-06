@@ -11,7 +11,7 @@ def main():
     services = [
         ('commit_service', 8001),
         ('pullRequest_service', 8002),
-        ('issues_service', 8003),
+        ('issue_service', 8003),
     ]
 
     # Create a process for each microservice
