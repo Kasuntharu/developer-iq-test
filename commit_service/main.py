@@ -6,6 +6,9 @@ from fastapi import FastAPI
 import requests
 app = FastAPI()
 
+@app.get("/")
+def root():
+    return  {"item_id": "item_id", "q": "q"}
 
 # @app.get("/{user}/{u}")
 # def read_root(user: str,u: int):
@@ -27,4 +30,4 @@ def read_root():
 #     return {"item_id": item_id, "q": q}
 
 if __name__ == "_main_":
-    uvicorn.run("_main_:app", host="0.0.0.0", port=8008, reload=True, workers=2)
+    uvicorn.run("_main_:app", host="0.0.0.0", port=8001, reload=True, workers=2)

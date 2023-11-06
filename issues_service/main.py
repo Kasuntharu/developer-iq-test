@@ -29,4 +29,4 @@ def read_root():
 #     return {"item_id": item_id, "q": q}
 
 if __name__ == "_main_":
-    uvicorn.run("_main_:app", host="0.0.0.0", port=8010, reload=True, workers=2)
+    uvicorn.run("_main_:app", host="0.0.0.0", port=8003, reload=True, workers=2)

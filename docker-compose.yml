@@ -1,0 +1,13 @@
+version: '1.0'
+services:
+  project1:
+    build: ./commit_service
+    command: uvicorn commit_service.main:app --host 0.0.0.0 --port 8001
+    ports:
+      - "8001:8001"
+
+  project2:
+    build: ./createPullRequest_service
+    command: uvicorn createPullRequest_service.main:app --host 0.0.0.0 --port 8002
+    ports:
+      - "8002:8002"
