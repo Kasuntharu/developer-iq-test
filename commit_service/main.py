@@ -1,9 +1,13 @@
+import sys
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 import uvicorn
 import json
 from typing import Union
 import requests
+
+sys.path.insert(0, '/config/')
+
 from config.config import settings
 
 
