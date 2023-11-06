@@ -10,7 +10,7 @@ def main():
     # Define your microservices and their associated ports
     services = [
         ('commit_service', 8001),
-        ('createPullRequest_service', 8002),
+        ('pullRequest_service', 8002),
         ('issues_service', 8003),
     ]
 

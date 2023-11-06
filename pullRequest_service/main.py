@@ -6,6 +6,11 @@ import requests
 app = FastAPI()
 
 
+@app.get("/status")
+def status():
+    return  "Pull Request service is working properly"
+
+    
 # @app.get("/{user}/{u}")
 # def read_root(user: str,u: int):
 #     print(u)

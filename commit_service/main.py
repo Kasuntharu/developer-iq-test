@@ -6,9 +6,9 @@ from fastapi import FastAPI
 import requests
 app = FastAPI()
 
-@app.get("/")
-def root():
-    return  {"item_id": "item_id", "q": "q"}
+@app.get("/status")
+def status():
+    return  "Commit service is working properly"
 
 # @app.get("/{user}/{u}")
 # def read_root(user: str,u: int):
