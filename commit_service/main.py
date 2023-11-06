@@ -4,10 +4,9 @@ import uvicorn
 import json
 from typing import Union
 import requests
-from .config import Settings
+from config.config import settings
 
 
-settings = Settings()
 app = FastAPI()
 
 headers = {
