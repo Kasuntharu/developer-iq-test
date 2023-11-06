@@ -4,14 +4,17 @@ import uvicorn
 import json
 from typing import Union
 import requests
+from .config import Settings
 
 
+settings = Settings()
 app = FastAPI()
 
 headers = {
         'Accept': 'application/vnd.github+json',
-        # 'Authorization': 'Bearer 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',
+        'Authorization': f'Bearer {settings.GITHUB_TOKEN}'
     }
+
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
@@ -29,11 +32,10 @@ async def requests_exception_handler(request: Request, exc: requests.RequestExce
         content={"message": "An error occurred while handling the request", "details": str(exc)},
     )
 
-
-
 @app.get("/status")
 def status():
     return  "Commit service is working properly"
+
 
 # @app.get("/{user}/{u}")
 # def read_root(user: str,u: int):
