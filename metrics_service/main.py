@@ -13,12 +13,14 @@ app = FastAPI()
 
 
 GITHUB_USERNAME = "Kasuntharu"
-ACCESS_TOKEN = "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"
+ACCESS_TOKEN = "ghp_zzzQ6qRWR4E6GH6Uk59aMrtsLxCOH2IUW3k92Fz" #remove z
 
 BASE_URL = "https://api.github.com"
 
-
-
+headers = {
+        "Authorization": f"token {ACCESS_TOKEN}",
+        "Accept": "application/vnd.github.v3+json",
+    }
 
 @app.get("/")
 def read_root():
@@ -97,12 +99,26 @@ def get_repository_metrics(owner: str, repo: str, username: str):
             "repository": f"{owner}/{repo}",
             "username": username,
             "commits": commits,
-            "pull_requests": pull_requests,
+            "pull_requests_created": pull_requests_created,
             "issues_resolved": issues_resolved,
-            "merge_requests": merge_requests
+            "pull_requests_merged": merge_requests_creted
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to fetch metrics: {str(e)}")
+
+
+@app.get("/repos/{owner}/{repo}/pulls")
+def get_pulls(owner: str, repo: str):
+    url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
+
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    return response.json()
+
+
+@app.get("/repos/{owner}/{repo}/pulls/{user}")
+def get_pulls_by_user(owner: str, repo: str, user: str):
+    return "Hello"
 
 
 
