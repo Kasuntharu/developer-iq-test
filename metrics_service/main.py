@@ -8,12 +8,21 @@ from fastapi import FastAPI
 import requests
 from pydantic import BaseModel
 import json 
-
+import boto3
 app = FastAPI()
 
 
+# Initialize DynamoDB client with explicit credentials
+dynamodb = boto3.resource(
+    'dynamodb',
+    aws_access_key_id='AKIAWWJOX62Z4QMOXE6S',
+    aws_secret_access_key='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',
+    region_name='us-east-1'
+)
+
+
 GITHUB_USERNAME = "Kasuntharu"
-ACCESS_TOKEN = "ghp_zzzQ6qRWR4E6GH6Uk59aMrtsLxCOH2IUW3k92Fz" #remove z
+ACCESS_TOKEN = "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" #remove zzz
 
 BASE_URL = "https://api.github.com"
 
@@ -30,11 +39,6 @@ def read_root():
 @app.get("/repository_users/{owner}/{repo}")
 def get_repository_users(owner: str, repo: str):
     url = f"{BASE_URL}/repos/{owner}/{repo}/contributors"
-
-    headers = {
-        "Authorization": f"token {ACCESS_TOKEN}",
-        "Accept": "application/vnd.github.v3+json",
-    }
 
     try:
         response = requests.get(url, headers=headers)
@@ -107,6 +111,7 @@ def get_repository_metrics(owner: str, repo: str, username: str):
         raise HTTPException(status_code=500, detail=f"Failed to fetch metrics: {str(e)}")
 
 
+
 @app.get("/repos/{owner}/{repo}/pulls")
 def get_pulls(owner: str, repo: str):
     url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
@@ -118,7 +123,109 @@ def get_pulls(owner: str, repo: str):
 
 @app.get("/repos/{owner}/{repo}/pulls/{user}")
 def get_pulls_by_user(owner: str, repo: str, user: str):
+    #url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
     return "Hello"
+
+
+@app.get("/dynamodb")
+def test():
+    url = f"https://api.github.com/repos/facebook/react-native/pulls"
+
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    # return response.json()
+    add_item("asd2",1,response.json())
+    
+
+def add_item(p_key: str, sort_key: int, data: dict ):
+    dynamodb = boto3.resource(
+        'dynamodb',
+        aws_access_key_id='AKIAWWJOX62Z4QMOXE6S',
+        aws_secret_access_key='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',
+        region_name='ap-southeast-1'
+    )
+
+    for table in dynamodb.tables.all():
+        print(f"Table: {table.name}")
+
+    table = dynamodb.Table('dev-metrics')
+    
+    response = table.put_item(
+        Item={
+            'user_name': p_key,
+            'id': sort_key,
+            'data': {'data': data}
+        }
+    )
+
+    if response['ResponseMetadata']['HTTPStatusCode'] == 200:
+        print("Item added successfully!")
+        return "done"
+    else:
+        print("Error adding item.")
+        return "failed"
+
+
+
+#This is the updated version. this seems right
+@app.get("/repository_metricS/{owner}/{repo}/{username}")
+def get_repository_metrics(owner: str, repo: str, username: str):
+    url = f"{BASE_URL}/repos/{owner}/{repo}"
+    headers = {
+        "Authorization": f"token {ACCESS_TOKEN}",
+        "Accept": "application/vnd.github.v3+json",
+    }
+    repository_info = requests.get(url, headers=headers).json()
+
+    # Placeholder variables for metrics
+    commits = 0
+    pull_requests_created = 0
+    issues_resolved = 0
+    pull_requests_merged = 0
+
+    # Fetch repository information
+    repository_info = requests.get(url, headers=headers)
+    if repository_info.status_code != 200:
+        return {"error": "Repository not found or unauthorized access"}
+
+    # Fetch commits by the specified user
+    commits_url = f"{BASE_URL}/repos/{owner}/{repo}/commits?author={username}"
+    commits_info = requests.get(commits_url, headers=headers).json()
+    commits = len(commits_info)
+
+    # Fetch pull requests created by the specified user
+    pull_requests_url = f"{BASE_URL}/repos/{owner}/{repo}/pulls?creator={username}"
+    pull_requests_info = requests.get(pull_requests_url, headers=headers).json()
+    pull_requests_created = len(pull_requests_info)
+
+    # Fetch issues resolved by the specified user (assuming issues closed by comments or code changes)
+    issues_url = f"{BASE_URL}/repos/{owner}/{repo}/issues?state=closed&creator={username}"
+    issues_info = requests.get(issues_url, headers=headers).json()
+    issues_resolved = len(issues_info)
+
+    # Fetch merged pull requests by the specified user
+    merged_pull_requests_url = f"{BASE_URL}/repos/{owner}/{repo}/pulls?state=closed&creator={username}&base=master"
+    merged_pull_requests_info = requests.get(merged_pull_requests_url, headers=headers).json()
+    pull_requests_merged = len([pr for pr in merged_pull_requests_info if pr.get('merged_at')])
+
+    # Return metrics
+    return {
+        "repository": f"{owner}/{repo}",
+        "username": username,
+        "commits": commits,
+        "pull_requests_created": pull_requests_created,
+        "issues_resolved": issues_resolved,
+        "pull_requests_merged": pull_requests_merged
+    }
+
+
+
+
+
+
+
 
 
 
