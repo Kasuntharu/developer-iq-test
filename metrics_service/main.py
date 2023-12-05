@@ -15,14 +15,14 @@ app = FastAPI()
 # Initialize DynamoDB client with explicit credentials
 dynamodb = boto3.resource(
     'dynamodb',
-    aws_access_key_id='AKIAWWJOX62Z4QMOXE6S',
-    aws_secret_access_key='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',
+    aws_access_key_id='zzzAKIAWWJOX62Z4QMOXE6S',
+    aws_secret_access_key='PsjE8CAGSYWqaqIzFsj41Copoeo8h//zTT5GWYRuzzz',
     region_name='us-east-1'
 )
 
 
 GITHUB_USERNAME = "Kasuntharu"
-ACCESS_TOKEN = "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" #remove zzz
+ACCESS_TOKEN = "zzz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" #remove zzz
 
 BASE_URL = "https://api.github.com"
 
