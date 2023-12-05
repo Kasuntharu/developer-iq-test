@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker buildx build  ./metrics_service --file Dockerfile --tag dumidu1998/metrics_service:latest
+      run: docker buildx build  ./metrics_service --file ./metrics_service/Dockerfile --tag dumidu1998/metrics_service:latest
