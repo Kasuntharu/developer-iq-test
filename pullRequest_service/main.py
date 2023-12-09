@@ -6,6 +6,11 @@ import requests
 app = FastAPI()
 
 
+@app.get("/status")
+def status():
+    return  "Pull Request service is working properly"
+
+    
 # @app.get("/{user}/{u}")
 # def read_root(user: str,u: int):
 #     print(u)
@@ -15,11 +20,11 @@ app = FastAPI()
 
 #Getting Pull requests
 
-@app.get("/issues")
+@app.get("/pulls")
 def read_root():
     # print(u)
     #url = f"https://api.github.com/repos/Kasuntharu/knowledge_hub/pulls"  
-    url = f"https://api.github.com/repos/facebook/react-native/issues"
+    url = f"https://api.github.com/repos/facebook/react-native/pulls" 
     response = requests.get(url)
     return response.json()
 
@@ -29,4 +34,4 @@ def read_root():
 #     return {"item_id": item_id, "q": q}
 
 if __name__ == "_main_":
-    uvicorn.run("_main_:app", host="0.0.0.0", port=8010, reload=True, workers=2)
+    uvicorn.run("_main_:app", host="0.0.0.0", port=8002, reload=True, workers=2)
